@@ -1,0 +1,1249 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مراجعة SQL | EG_Code</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', system-ui, sans-serif; }
+
+        body {
+            background: #f4f7fc;
+            color: #1e2a41;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* ===== SIDEBAR ===== */
+        .sidebar {
+            width: 260px;
+            background: linear-gradient(145deg, #0b1a33, #122b4a);
+            color: #e3eaf5;
+            padding: 20px 12px;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+            flex-shrink: 0;
+            z-index: 100;
+            border-left: 2px solid #2d6a9f;
+        }
+
+        .sidebar .logo {
+            text-align: center;
+            border-bottom: 1px solid #2a4b6e;
+            padding-bottom: 15px;
+            margin-bottom: 15px;
+        }
+
+        .sidebar .logo h2 {
+            font-size: 1.5rem;
+            background: linear-gradient(135deg, #f7d875, #f0b34b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .sidebar .logo small {
+            display: block;
+            color: #b6d0e8;
+            font-size: 0.75rem;
+        }
+
+        .sidebar .logo .yt-link {
+            display: inline-block;
+            margin-top: 8px;
+            color: #f7d875;
+            font-size: 0.8rem;
+            padding: 3px 14px;
+            border: 1px solid #f7d87533;
+            border-radius: 30px;
+            text-decoration: none;
+            -webkit-text-fill-color: #f7d875;
+        }
+
+        .sidebar-nav {
+            list-style: none;
+        }
+
+        .sidebar-nav li {
+            padding: 5px 10px;
+            margin: 3px 0;
+            border-radius: 30px;
+            font-size: 0.8rem;
+            transition: 0.2s;
+            color: #cbdae9;
+        }
+
+        .sidebar-nav li:hover {
+            background: #1d3d5f;
+            color: white;
+        }
+
+        .sidebar-nav li a {
+            color: inherit;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .sidebar-nav li i {
+            width: 18px;
+            color: #f0b34b;
+            font-size: 0.8rem;
+        }
+
+        .sidebar::-webkit-scrollbar { width: 3px; }
+        .sidebar::-webkit-scrollbar-thumb { background: #d48b2b; border-radius: 10px; }
+
+        /* ===== MAIN ===== */
+        .main-content {
+            flex: 1;
+            padding: 25px 35px 40px;
+            background: #f9fcff;
+        }
+
+        /* ===== HEADER ===== */
+        .page-header {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            background: white;
+            padding: 12px 25px;
+            border-radius: 40px;
+            box-shadow: 0 4px 15px rgba(0, 20, 40, 0.06);
+            margin-bottom: 30px;
+        }
+
+        .page-header .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .page-header .brand i {
+            font-size: 1.8rem;
+            color: #d48b2b;
+        }
+
+        .page-header .brand h3 {
+            font-weight: 600;
+            color: #0b1a33;
+            font-size: 1.1rem;
+        }
+
+        .page-header .brand h3 span {
+            color: #d48b2b;
+        }
+
+        .header-links {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .header-links a {
+            text-decoration: none;
+            color: #1e3a5f;
+            font-weight: 500;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            padding-bottom: 3px;
+        }
+
+        .header-links a i {
+            color: #d48b2b;
+        }
+
+        .header-links a:hover {
+            border-bottom-color: #d48b2b;
+        }
+
+        .header-links .connect-btn {
+            background: #0b1a33;
+            color: white;
+            padding: 6px 18px;
+            border-radius: 40px;
+            border: none;
+            font-weight: 600;
+            transition: 0.2s;
+            border-bottom: none;
+        }
+
+        .header-links .connect-btn i {
+            color: #f0b34b;
+        }
+
+        .header-links .connect-btn:hover {
+            background: #1d3d5f;
+            transform: scale(1.03);
+            border-bottom: none;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: #0b1a33;
+            font-size: 1.3rem;
+            cursor: pointer;
+        }
+
+        /* ===== TOPICS ===== */
+        .topic-container {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .topic-card {
+            background: white;
+            border-radius: 16px;
+            padding: 18px 22px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+            border-right: 4px solid #d48b2b;
+            transition: 0.2s;
+            border: 1px solid #e8edf4;
+            border-right-width: 4px;
+        }
+
+        .topic-card:hover {
+            box-shadow: 0 6px 20px rgba(0, 20, 40, 0.08);
+            transform: translateY(-2px);
+        }
+
+        .topic-card .title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #0b1a33;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 6px;
+            flex-wrap: wrap;
+        }
+
+        .topic-card .title i {
+            color: #d48b2b;
+            font-size: 1rem;
+            width: 24px;
+            text-align: center;
+        }
+
+        .topic-card .title .badge {
+            background: #122b4a;
+            color: #f7d875;
+            font-size: 0.6rem;
+            padding: 1px 12px;
+            border-radius: 30px;
+            font-weight: 500;
+        }
+
+        .topic-card .desc {
+            font-size: 0.9rem;
+            line-height: 1.7;
+            color: #1f2e46;
+            background: #f7faff;
+            padding: 8px 14px;
+            border-radius: 12px;
+            margin: 4px 0 10px 0;
+            border: 1px solid #eef3fa;
+        }
+
+        /* ===== CODE BOX ===== */
+        .topic-card .code-box {
+            background: #0d1f2e;
+            color: #d4e2f5;
+            padding: 12px 16px;
+            border-radius: 12px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.82rem;
+            direction: ltr;
+            text-align: left;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            border-left: 3px solid #f0b34b;
+            line-height: 1.6;
+            position: relative;
+        }
+
+        .topic-card .code-box .kw { color: #ff7b72; font-weight: 600; }
+        .topic-card .code-box .fn { color: #79c0ff; }
+        .topic-card .code-box .str { color: #a5d6ff; }
+        .topic-card .code-box .num { color: #f78c6c; }
+        .topic-card .code-box .cmt { color: #7a9bcb; font-style: italic; }
+        .topic-card .code-box .op { color: #ff7b72; }
+        .topic-card .code-box .var { color: #ffac6f; }
+        .topic-card .code-box .tbl { color: #d2a8ff; }
+        .topic-card .code-box .col { color: #7ee0ff; }
+        .topic-card .code-box .arrow { color: #f0b34b; font-weight: bold; }
+
+        .topic-card .code-box .line {
+            display: block;
+            padding: 0;
+            margin: 0;
+            line-height: 1.6;
+        }
+
+        .topic-card .code-box .copy-btn {
+            position: absolute;
+            top: 6px;
+            right: 8px;
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: #a0b8d0;
+            padding: 2px 10px;
+            border-radius: 6px;
+            font-size: 0.65rem;
+            cursor: pointer;
+            font-family: 'Segoe UI', sans-serif;
+            transition: 0.2s;
+        }
+
+        .topic-card .code-box .copy-btn:hover {
+            background: rgba(255,255,255,0.15);
+            color: white;
+        }
+
+        .topic-card .code-box .result {
+            color: #7ee0ff;
+            display: block;
+            margin-top: 4px;
+            padding-top: 4px;
+            border-top: 1px dashed #2a4b6e;
+        }
+
+        /* ===== CONNECT FORM (ضمن البطاقات) ===== */
+        .topic-card .connect-form input,
+        .topic-card .connect-form textarea {
+            width: 100%;
+            padding: 10px 16px;
+            margin: 6px 0;
+            border-radius: 10px;
+            border: 1px solid #d0ddee;
+            font-size: 0.95rem;
+            background: #f7faff;
+            transition: 0.2s;
+        }
+
+        .topic-card .connect-form input:focus,
+        .topic-card .connect-form textarea:focus {
+            outline: none;
+            border-color: #d48b2b;
+            box-shadow: 0 0 0 3px rgba(212, 139, 43, 0.1);
+        }
+
+        .topic-card .connect-form button {
+            background: #0b1a33;
+            color: white;
+            padding: 10px 24px;
+            border: none;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: 0.2s;
+            width: 100%;
+            margin-top: 4px;
+        }
+
+        .topic-card .connect-form button:hover {
+            background: #1d3d5f;
+            transform: scale(1.02);
+        }
+
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px 10px;
+            margin-top: 8px;
+        }
+
+        .tags span {
+            background: #eef3fa;
+            padding: 1px 12px;
+            border-radius: 40px;
+            font-size: 0.7rem;
+            color: #1e3a5f;
+            font-weight: 500;
+        }
+
+        .tags span i {
+            margin-left: 4px;
+            color: #d48b2b;
+        }
+
+        hr {
+            margin: 20px 0 12px;
+            border: 0;
+            height: 1px;
+            background: linear-gradient(to left, #d0ddee, transparent);
+        }
+
+        .footer-note {
+            text-align: center;
+            color: #4e6885;
+            font-size: 0.75rem;
+        }
+
+        .footer-note i { color: #d48b2b; }
+
+        /* ===== MODAL ===== */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(11, 26, 51, 0.7);
+            backdrop-filter: blur(4px);
+            justify-content: center;
+            align-items: center;
+            z-index: 999;
+            padding: 20px;
+        }
+
+        .modal-overlay.active { display: flex; }
+
+        .modal-box {
+            background: white;
+            border-radius: 24px;
+            padding: 30px 35px;
+            max-width: 480px;
+            width: 100%;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.3);
+            position: relative;
+            animation: fadeUp 0.3s ease;
+            border-top: 5px solid #d48b2b;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .modal-box .close {
+            position: absolute;
+            top: 12px;
+            left: 18px;
+            font-size: 1.6rem;
+            cursor: pointer;
+            color: #7a8ba3;
+            transition: 0.3s;
+            background: none;
+            border: none;
+        }
+
+        .modal-box .close:hover {
+            color: #0b1a33;
+            transform: rotate(90deg);
+        }
+
+        .modal-box h2 {
+            color: #0b1a33;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.3rem;
+        }
+
+        .modal-box h2 i { color: #d48b2b; }
+
+        .modal-box p {
+            color: #1f2e46;
+            line-height: 1.7;
+            margin: 8px 0;
+            font-size: 0.95rem;
+        }
+
+        .modal-box .info-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: #f7faff;
+            padding: 8px 16px;
+            border-radius: 30px;
+            margin: 4px 0;
+            border: 1px solid #e8edf4;
+            font-size: 0.9rem;
+        }
+
+        .modal-box .info-item i {
+            color: #d48b2b;
+            width: 20px;
+        }
+
+        /* ===== OVERLAY ===== */
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.4);
+            z-index: 99;
+        }
+
+        .sidebar-overlay.active { display: block; }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 1024px) {
+            .sidebar { width: 220px; padding: 15px 8px; }
+            .sidebar-nav li { font-size: 0.75rem; padding: 4px 8px; }
+            .main-content { padding: 20px; }
+        }
+
+        @media (max-width: 850px) {
+            .sidebar {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                width: 270px;
+                height: 100vh;
+                transition: 0.3s ease;
+                z-index: 200;
+                border-left: none;
+                border-right: 2px solid #2d6a9f;
+            }
+
+            .sidebar.open { right: 0; }
+
+            .mobile-menu-btn { display: block; }
+
+            .main-content { padding: 15px; }
+
+            .page-header { padding: 10px 18px; }
+            .page-header .brand h3 { font-size: 1rem; }
+
+            .header-links { gap: 12px; }
+            .header-links a { font-size: 0.8rem; }
+            .header-links .connect-btn { padding: 5px 14px; font-size: 0.8rem; }
+        }
+
+        @media (max-width: 650px) {
+            .topic-card { padding: 14px 16px; }
+            .topic-card .title { font-size: 1rem; }
+            .topic-card .desc { font-size: 0.85rem; padding: 6px 12px; }
+            .topic-card .code-box { font-size: 0.75rem; padding: 10px 14px; }
+
+            .modal-box { padding: 20px; }
+            .modal-box h2 { font-size: 1.1rem; }
+        }
+
+        @media (max-width: 480px) {
+            .main-content { padding: 10px; }
+            .page-header { padding: 8px 12px; border-radius: 20px; }
+            .page-header .brand i { font-size: 1.3rem; }
+            .page-header .brand h3 { font-size: 0.85rem; }
+            .header-links a { font-size: 0.7rem; }
+            .header-links .connect-btn { font-size: 0.7rem; padding: 4px 10px; }
+
+            .topic-card { padding: 10px 12px; border-radius: 12px; }
+            .topic-card .title { font-size: 0.9rem; }
+            .topic-card .title i { font-size: 0.85rem; width: 20px; }
+            .topic-card .desc { font-size: 0.8rem; padding: 5px 10px; }
+            .topic-card .code-box { font-size: 0.7rem; padding: 8px 10px; line-height: 1.5; }
+            .topic-card .code-box .copy-btn { font-size: 0.55rem; padding: 1px 8px; }
+
+            .tags span { font-size: 0.6rem; padding: 1px 8px; }
+
+            .sidebar { width: 250px; }
+            .sidebar-nav li { font-size: 0.7rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===== SIDEBAR OVERLAY ===== -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- ===== SIDEBAR ===== -->
+    <aside class="sidebar" id="sidebar">
+        <div class="logo">
+            <h2><i class="fas fa-code"></i> EG_Code</h2>
+            <small><i class="fas fa-crown"></i> Elghazaly Web</small>
+            <a href="https://www.youtube.com/@EG_Code" target="_blank" class="yt-link"><i class="fab fa-youtube"></i> قناتنا</a>
+        </div>
+        <ul class="sidebar-nav">
+            <li><a href="#create-database"><i class="fas fa-database"></i> CREATE DATABASE</a></li>
+            <li><a href="#create-table"><i class="fas fa-table"></i> CREATE TABLE</a></li>
+            <li><a href="#insert"><i class="fas fa-pen"></i> INSERT</a></li>
+            <li><a href="#update"><i class="fas fa-edit"></i> UPDATE</a></li>
+            <li><a href="#delete"><i class="fas fa-trash"></i> DELETE</a></li>
+            <li><a href="#select"><i class="fas fa-search"></i> SELECT</a></li>
+            <li><a href="#where"><i class="fas fa-filter"></i> WHERE</a></li>
+            <li><a href="#order-by"><i class="fas fa-sort"></i> ORDER BY</a></li>
+            <li><a href="#group-by"><i class="fas fa-object-group"></i> GROUP BY</a></li>
+            <li><a href="#having"><i class="fas fa-filter"></i> HAVING</a></li>
+            <li><a href="#joins"><i class="fas fa-link"></i> JOIN</a></li>
+            <li><a href="#primary-key"><i class="fas fa-key"></i> PRIMARY KEY</a></li>
+            <li><a href="#foreign-key"><i class="fas fa-key"></i> FOREIGN KEY</a></li>
+            <li><a href="#constraints"><i class="fas fa-ban"></i> CONSTRAINT</a></li>
+            <li><a href="#default"><i class="fas fa-toggle-on"></i> DEFAULT</a></li>
+            <li><a href="#unique"><i class="fas fa-star"></i> UNIQUE</a></li>
+            <li><a href="#check"><i class="fas fa-check-circle"></i> CHECK</a></li>
+            <li><a href="#like"><i class="fas fa-percent"></i> LIKE</a></li>
+            <li><a href="#between"><i class="fas fa-arrows-alt-h"></i> BETWEEN</a></li>
+            <li><a href="#in"><i class="fas fa-inbox"></i> IN</a></li>
+            <li><a href="#case"><i class="fas fa-code-branch"></i> CASE</a></li>
+            <li><a href="#subquery"><i class="fas fa-code"></i> SUBQUERY</a></li>
+            <li><a href="#agg-functions"><i class="fas fa-calculator"></i> Agg Functions</a></li>
+            <li><a href="#view"><i class="fas fa-eye"></i> VIEW</a></li>
+            <li><a href="#sql-server"><i class="fas fa-server"></i> SQL SERVER</a></li>
+            <li><a href="#connect"><i class="fas fa-envelope"></i> CONNECT</a></li>
+        </ul>
+    </aside>
+
+    <!-- ===== MAIN ===== -->
+    <div class="main-content">
+
+        <header class="page-header">
+            <div class="brand">
+                <i class="fas fa-database"></i>
+                <h3>مراجعة <span>SQL</span></h3>
+            </div>
+            <div class="header-links">
+                <button class="mobile-menu-btn" id="menuToggle"><i class="fas fa-bars"></i></button>
+                <a id="aboutBtn"><i class="fas fa-user"></i> About</a>
+                <a href="https://hema-elghazaly.github.io/Portfolio-Ebrahim_Elghazaly/" target="_blank"><i class="fas fa-briefcase"></i> Portfolio</a>
+                <a id="connectBtn" class="connect-btn"><i class="fas fa-envelope"></i> Connect</a>
+            </div>
+        </header>
+
+        <div class="topic-container">
+
+            <!-- ======================================== -->
+            <!-- CREATE DATABASE -->
+            <!-- ======================================== -->
+            <div class="topic-card" id="create-database">
+                <div class="title"><i class="fas fa-database"></i> CREATE DATABASE <span class="badge">DDL</span></div>
+                <div class="desc">
+                    <strong>الشرح:</strong> تستخدم لإنشاء قاعدة بيانات جديدة. قبل إنشاء أي جدول، لازم يكون عندك قاعدة بيانات.
+                    <br><strong>مثال عملي:</strong> لو عايز تعمل نظام لإدارة مدرسة، هتعمل قاعدة بيانات باسم "SchoolDB".
+                </div>
+                <div class="code-box">
+                    <button class="copy-btn" onclick="copyCode(this)">نسخ</button>
+                    <span class="line"><span class="kw">CREATE DATABASE</span> <span class="tbl">SchoolDB</span>;</span>
+                    <span class="result">✅ تم إنشاء قاعدة البيانات "SchoolDB"</span>
+                </div>
+                <div class="tags"><span><i class="fas fa-tag"></i> DDL</span><span><i class="fas fa-plus"></i> إنشاء</span></div>
+            </div>
+
+            <!-- ======================================== -->
+            <!-- CREATE TABLE -->
+            <!-- ======================================== -->
+            <div class="topic-card" id="create-table">
+                <div class="title"><i class="fas fa-table"></i> CREATE TABLE <span class="badge">DDL</span></div>
+                <div class="desc">
+                    <strong>الشرح:</strong> تنشئ جدول جديد داخل قاعدة البيانات. تحدد اسم الجدول، الأعمدة، ونوع كل عمود.
+                    <br><strong>مثال عملي:</strong> هنعمل جدول "Students" فيه بيانات الطلاب: ID، الاسم، العمر.
+                </div>
+                <div class="code-box">
+                    <button class="copy-btn" onclick="copyCode(this)">نسخ</button>
+                    <span class="line"><span class="kw">CREATE TABLE</span> <span class="tbl">Students</span> (</span>
+                    <span class="line">  <span class="col">ID</span> <span class="kw">INT</span> <span class="kw">PRIMARY KEY</span>,</span>
+                    <span class="line">  <span class="col">Name</span> <span class="kw">VARCHAR</span>(<span class="num">50</span>) <span class="kw">NOT NULL</span>,</span>
+                    <span class="line">  <span class="col">Age</span> <span class="kw">INT</span></span>
+                    <span class="line">);</span>
+                    <span class="result">✅ تم إنشاء جدول Students</span>
+                </div>
+                <div class="tags"><span><i class="fas fa-tag"></i> DDL</span><span><i class="fas fa-table"></i> هيكل</span></div>
+            </div>
+
+            <!-- ======================================== -->
+            <!-- INSERT -->
+            <!-- ======================================== -->
+            <div class="topic-card" id="insert">
+                <div class="title"><i class="fas fa-pen"></i> INSERT <span class="badge">DML</span></div>
+                <div class="desc">
+                    <strong>الشرح:</strong> إضافة بيانات جديدة (سجلات) إلى الجدول. لازم تطابق الأعمدة مع القيم.
+                    <br><strong>مثال عملي:</strong> هنضيف طالب جديد اسمه "أحمد" عمره 22 سنة.
+                </div>
+                <div class="code-box">
+                    <button class="copy-btn" onclick="copyCode(this)">نسخ</button>
+                    <span class="line"><span class="kw">INSERT INTO</span> <span class="tbl">Students</span> (<span class="col">ID</span>, <span class="col">Name</span>, <span class="col">Age</span>)</span>
+                    <span class="line"><span class="kw">VALUES</span> (<span class="num">1</span>, <span class="str">'أحمد محمد'</span>, <span class="num">22</span>);</span>
+                    <span class="result">✅ تم إدراج الطالب أحمد</span>
+                </div>
+                <div class="tags"><span><i class="fas fa-tag"></i> DML</span><span><i class="fas fa-plus-circle"></i> إدراج</span></div>
+            </div>
+
+            <!-- ======================================== -->
+            <!-- UPDATE -->
+            <!-- ======================================== -->
+            <div class="topic-card" id="update">
+                <div class="title"><i class="fas fa-edit"></i> UPDATE <span class="badge">DML</span></div>
+                <div class="desc">
+                    <strong>الشرح:</strong> تعديل البيانات الموجودة. لازم تستخدم <span class="kw">WHERE</span> عشان تحدد السجل المطلوب، وإلا هتعدل كل البيانات!
+                    <br><strong>مثال عملي:</strong> هنغير عمر الطالب اللي رقمه 1 من 22 لـ 23.
+                </div>
+                <div class="code-box">
+                    <button class="copy-btn" onclick="copyCode(this)">نسخ</button>
+                    <span class="line"><span class="kw">UPDATE</span> <span class="tbl">Students</span></span>
+                    <span class="line"><span class="kw">SET</span> <span class="col">Age</span> = <span class="num">23</span></span>
+                    <span class="line"><span class="kw">WHERE</span> <span class="col">ID</span> = <span class="num">1</span>;</span>
+                    <span class="result">✅ تم تحديث عمر الطالب رقم 1</span>
+                </div>
+                <div class="tags"><span><i class="fas fa-tag"></i> DML</span><span><i class="fas fa-pen-fancy"></i> تعديل</span></div>
+            </div>
+
+            <!-- ======================================== -->
+            <!-- DELETE -->
+            <!-- ======================================== -->
+            <div class="topic-card" id="delete">
+                <div class="title"><i class="fas fa-trash"></i> DELETE <span class="badge">DML</span></div>
+                <div class="desc">
+                    <strong>الشرح:</strong> حذف سجلات من الجدول. لازم تستخدم <span class="kw">WHERE</span> عشان تحدد السجل، وإلا هتحذف كل البيانات!
+                    <br><strong>مثال عملي:</strong> هنحذف الطالب اللي رقمه 1.
+                </div>
+                <div class="code-box">
+                    <button class="copy-btn" onclick="copyCode(this)">نسخ</button>
+                    <span class="line"><span class="kw">DELETE FROM</span> <span class="tbl">Students</span></span>
+                    <span class="line"><span class="kw">WHERE</span> <span class="col">ID</span> = <span class="num">1</span>;</span>
+                    <span class="result">✅ تم حذف الطالب رقم 1</span>
+                </div>
+                <div class="tags"><span><i class="fas fa-tag"></i> DML</span><span><i class="fas fa-trash"></i> حذف</span></div>
+            </div>
+
+            <!-- ======================================== -->
+            <!-- SELECT -->
+            <!-- ======================================== -->
+            <div class="topic-card" id="select">
+                <div class="title"><i class="fas fa-search"></i> SELECT <span class="badge">DQL</span></div>
+                <div class="desc">
+                    <strong>الشرح:</strong> استعلام لجلب البيانات من الجدول. تقدر تختار أعمدة معينة أو كل الأعمدة (*).
+                    <br><strong>مثال عملي:</strong> هنعرض أسماء وأعمار جميع الطلاب.
+                </div>
+                <div class="code-box">
+                    <button class="copy-btn" onclick="copyCode(this)">نسخ</button>
+                    <span class="line"><span class="kw">SELECT</span> <span class="col">Name</span>, <span class="col">Age</span></span>
+                    <span class="line"><span class="kw">FROM</span> <span class="tbl">Students</span>;</span>
+                    <span class="result">✅ عرض أسماء وأعمار الطلاب</span>
+                </div>
+                <div class="tags"><span><i class="fas fa-tag"></i> DQL</span><span><i class="fas fa-eye"></i> استعلام</span></div>
+            </div>
+
+            <!-- ======================================== -->
+            <!-- WHERE -->
+            <!-- ======================================== -->
+            <div class="topic-card" id="where">
+                <div class="title"><i class="fas fa-filter"></i> WHERE</div>
+                <div class="desc">
+                    <strong>الشرح:</strong> تصفية النتائج بحيث ترجع فقط السجلات اللي تحقق الشرط المطلوب.
+                    <br><strong>مثال عملي:</strong> نعرض الطلاب اللي أعمارهم أكبر من 18 سنة والقسم بتاعهم CS.
+                </div>
+                <div class="code-box">
+                    <button class="copy-btn" onclick="copyCode(this)">نسخ</button>
+                    <span class="line"><span class="kw">SELECT</span> <span class="op">*</span></span>
+                    <span class="line"><span class="kw">FROM</span> <span class="tbl">Students</span></span>
+                    <span class="line"><span class="kw">WHERE</span> <span class="col">Age</span> <span class="op">></span> <span class="num">18</span></span>
+                    <span class="line">  <span class="kw">AND</span> <span class="col">Dept</span> = <span class="str">'CS'</span>;</span>
+                    <span class="result">✅ طلاب CS أعمارهم أكبر من 18</span>
+                </div>
+                <div class="tags"><span><i class="fas fa-filter"></i> تصفية</span></div>
+            </div>
+
+            <!-- ======================================== -->
+            <!-- ORDER BY -->
+            <!-- ======================================== -->
+            <div class="topic-card" id="order-by">
+                <div class="title"><i class="fas fa-sort"></i> ORDER BY</div>
+                <div class="desc">
+                    <strong>الشرح:</strong> ترتيب النتائج تصاعدياً (ASC) أو تنازلياً (DESC).
+                    <br><strong>مثال عملي:</strong> نعرض الطلاب مرتبين تنازلياً حسب العمر.
+                </div>
+                <div class="code-box">
+                    <button class="copy-btn" onclick="copyCode(this)">نسخ</button>
+                    <span class="line"><span class="kw">SELECT</span> <span class="op">*</span></span>
+                    <span class="line"><span class="kw">FROM</span> <span class="tbl">Students</span></span>
+                    <span class="line"><span class="kw">ORDER BY</span> <span class="col">Age</span> <span class="kw">DESC</span>;</span>
+                    <span class="result">✅ الطلاب من الأكبر للأصغر</span>
+                </div>
+                <div class="tags"><span><i class="fas fa-arrow-up"></i> ترتيب</span></div>
+            </div>
+
+            <!-- ======================================== -->
+            <!-- GROUP BY -->
+            <!-- ======================================== -->
+            <div class="topic-card" id="group-by">
+                <div class="title"><i class="fas fa-object-group"></i> GROUP BY</div>
+                <div class="desc">
+                    <strong>الشرح:</strong> تجميع البيانات حسب عمود معين، عادة مع دوال التجميع (COUNT, SUM, AVG).
+                    <br><strong>مثال عملي:</strong> عدد الطلاب في كل قسم.
+                </div>
+                <div class="code-box">
+                    <button class="copy-btn" onclick="copyCode(this)">نسخ</button>
+                    <span class="line"><span class="kw">SELECT</span> <span class="col">Dept</span>, <span class="kw">COUNT</span>(<span class="op">*</span>) <span class="kw">AS</span> <span class="col">StudentCount</span></span>
+                    <span class="line"><span class="kw">FROM</span> <span class="tbl">Students</span></span>
+                    <span class="line"><span class="kw">GROUP BY</span> <span class="col">Dept</span>;</span>
+                    <span class="result">✅ عدد الطلاب في كل قسم</span>
+                </div>
+                <div class="tags"><span><i class="fas fa-object-group"></i> تجميع</span></div>
+            </div>
+
+            <!-- ======================================== -->
+            <!-- HAVING -->
+            <!-- ======================================== -->
+            <div class="topic-card" id="having">
+                <div class="title"><i class="fas fa-filter"></i> HAVING</div>
+                <div class="desc">
+                    <strong>الشرح:</strong> تصفية بعد التجميع (مع GROUP BY). الفرق عن WHERE إن WHERE قبل التجميع وHAVING بعده.
+                    <br><strong>مثال عملي:</strong> الأقسام اللي فيها أكثر من 5 طلاب.
+                </div>
+                <div class="code-box">
+                    <button class="copy-btn" onclick="copyCode(this)">نسخ</button>
+                    <span class="line"><span class="kw">SELECT</span> <span class="col">Dept</span>, <span class="kw">COUNT</span>(<span class="op">*</span>) <span class="kw">AS</span> <span class="col">Count</span></span>
+                    <span class="line"><span class="kw">FROM</span> <span class="tbl">Students</span></span>
+                    <span class="line"><span class="kw">GROUP BY</span> <span class="col">Dept</span></span>
+                    <span class="line"><span class="kw">HAVING</span> <span class="kw">COUNT</span>(<span class="op">*</span>) <span class="op">></span> <span class="num">5</span>;</span>
+                    <span class="result">✅ الأقسام اللي فيها أكثر من 5 طلاب</span>
+                </div>
+                <div class="tags"><span><i class="fas fa-filter"></i> تصفية</span><span><i class="fas fa-object-group"></i> تجميع</span></div>
+            </div>
+
+            <!-- ======================================== -->
+            <!-- JOIN -->
+            <!-- ======================================== -->
+            <div class="topic-card" id="joins">
+                <div class="title"><i class="fas fa-link"></i> JOIN</div>
+                <div class="desc">
+                    <strong>الشرح:</strong> ربط جدولين مع بعض. أنواعه: INNER (المتطابق فقط)، LEFT (كل الجدول الأيسر)، RIGHT، FULL.
+                    <br><strong>مثال عملي:</strong> عرض اسم الطالب مع اسم الكورس اللي مسجل فيه.
+                </div>
+                <div class="code-box">
+                    <button class="copy-btn" onclick="copyCode(this)">نسخ</button>
+                    <span class="line"><span class="kw">SELECT</span> S.<span class="col">Name</span>, C.<span class="col">Title</span></span>
+                    <span class="line"><span class="kw">FROM</span> <span class="tbl">Students</span> S</span>
+                    <span class="line"><span class="kw">INNER JOIN</span> <span class="tbl">Courses</span> C</span>
+                    <span class="line">  <span class="kw">ON</span> S.<span class="col">ID</span> = C.<span class="col">StudentID</span>;</span>
+                    <span class="result">✅ كل طالب مع الكورس المسجل فيه</span>
+                </div>
+                <div class="tags"><span><i class="fas fa-link"></i> ربط</span></div>
+            </div>
+
+            <!-- ======================================== -->
+            <!-- PRIMARY KEY -->
+            <!-- ======================================== -->
+            <div class="topic-card" id="primary-key">
+                <div class="title"><i class="fas fa-key"></i> PRIMARY KEY</div>
+                <div class="desc">
+                    <strong>الشرح:</strong> مفتاح أساسي يميز كل سجل بشكل فريد. لا يسمح بتكرار القيم أو NULL.
+                    <br><strong>مثال عملي:</strong> كل طالب له ID فريد يميزه عن غيره.
+                </div>
+                <div class="code-box">
+                    <button class="copy-btn" onclick="copyCode(this)">نسخ</button>
+                    <span class="line"><span class="kw">CREATE TABLE</span> <span class="tbl">Employees</span> (</span>
+                    <span class="line">  <span class="col">EmpID</span> <span class="kw">INT</span> <span class="kw">PRIMARY KEY</span>,</span>
+                    <span class="line">  <span class="col">Name</span> <span class="kw">VARCHAR</span>(<span class="num">50</span>)</span>
+                    <span class="line">);</span>
+                    <span class="result">✅ EmpID هو المفتاح الأساسي</span>
+                </div>
+                <div class="tags"><span><i class="fas fa-gavel"></i> قيد</span><span><i class="fas fa-star"></i> فريد</span></div>
+            </div>
+
+            <!-- ======================================== -->
+            <!-- FOREIGN KEY -->
+            <!-- ======================================== -->
+            <div class="topic-card" id="foreign-key">
+                <div class="title"><i class="fas fa-key"></i> FOREIGN KEY</div>
+                <div class="desc">
+                    <strong>الشرح:</strong> مفتاح خارجي يربط جدول بجدول آخر. بيشير للمفتاح الأساسي في الجدول التاني.
+                    <br><strong>مثال عملي:</strong> جدول الطلبات مرتبط بجدول العملاء عن طريق CustomerID.
+                </div>
+                <div class="code-box">
+                    <button class="copy-btn" onclick="copyCode(this)">نسخ</button>
+                    <span class="line"><span class="kw">CREATE TABLE</span> <span class="tbl">Orders</span> (</span>
+                    <span class="line">  <span class="col">OrderID</span> <span class="kw">INT</span> <span class="kw">PRIMARY KEY</span>,</span>
+                    <span class="line">  <span class="col">CustomerID</span> <span class="kw">INT</span>,</span>
+                    <span class="line">  <span class="kw">FOREIGN KEY</span> (<span class="col">CustomerID</span>)</span>
+                    <span class="line">    <span class="kw">REFERENCES</span> <span class="tbl">Customers</span>(<span class="col">ID</span>)</span>
+                    <span class="line">);</span>
+                    <span class="result">✅ Orders مرتبط بـ Customers</span>
+                </div>
+                <div class="tags"><span><i class="fas fa-gavel"></i> قيد</span><span><i class="fas fa-link"></i> علاقة</span></div>
+            </div>
+
+            <!-- ======================================== -->
+            <!-- CONSTRAINT -->
+            <!-- ======================================== -->
+            <div class="topic-card" id="constraints">
+                <div class="title"><i class="fas fa-ban"></i> CONSTRAINT</div>
+                <div class="desc">
+                    <strong>الشرح:</strong> قيد يمكن تطبيقه على 3 مستويات: مستوى العمود، مستوى الجدول، أو بعد الإنشاء بـ ALTER.
+                    <br><strong>مثال عملي:</strong> نفس القيد لكن بطرق مختلفة.
+                </div>
+                <div class="code-box">
+                    <button class="copy-btn" onclick="copyCode(this)">نسخ</button>
+                    <span class="line"><span class="cmt">-- مستوى العمود</span></span>
+                    <span class="line"><span class="col">ID</span> <span class="kw">INT</span> <span class="kw">PRIMARY KEY</span></span>
+                    <span class="line"><span class="cmt">-- مستوى الجدول</span></span>
+                    <span class="line"><span class="kw">CONSTRAINT</span> <span class="tbl">PK_Emp</span> <span class="kw">PRIMARY KEY</span> (<span class="col">ID</span>)</span>
+                    <span class="line"><span class="cmt">-- بعد الإنشاء (ALTER)</span></span>
+                    <span class="line"><span class="kw">ALTER TABLE</span> <span class="tbl">Employees</span></span>
+                    <span class="line"><span class="kw">ADD CONSTRAINT</span> <span class="tbl">UQ_Email</span> <span class="kw">UNIQUE</span> (<span class="col">Email</span>);</span>
+                </div>
+                <div class="tags"><span><i class="fas fa-gavel"></i> قيد</span><span><i class="fas fa-level-up-alt"></i> مستويات</span></div>
+            </div>
+
+            <!-- ======================================== -->
+            <!-- DEFAULT -->
+            <!-- ======================================== -->
+            <div class="topic-card" id="default">
+                <div class="title"><i class="fas fa-toggle-on"></i> DEFAULT</div>
+                <div class="desc">
+                    <strong>الشرح:</strong> قيمة افتراضية للعمود لو مفيش قيمة اتحطت عند الإدراج.
+                    <br><strong>مثال عملي:</strong> لو مفيش حالة اتحطت، يبقى افتراضي "نشط".
+                </div>
+                <div class="code-box">
+                    <button class="copy-btn" onclick="copyCode(this)">نسخ</button>
+                    <span class="line"><span class="kw">CREATE TABLE</span> <span class="tbl">Users</span> (</span>
+                    <span class="line">  <span class="col">ID</span> <span class="kw">INT</span> <span class="kw">PRIMARY KEY</span>,</span>
+                    <span class="line">  <span class="col">Status</span> <span class="kw">VARCHAR</span>(<span class="num">20</span>) <span class="kw">DEFAULT</span> <span class="str">'نشط'</span></span>
+                    <span class="line">);</span>
+                    <span class="result">✅ لو مفيش قيمة، يبقى Status = 'نشط'</span>
+                </div>
+                <div class="tags"><span><i class="fas fa-gavel"></i> قيد</span><span><i class="fas fa-check-circle"></i> افتراضي</span></div>
+            </div>
+
+            <!-- ======================================== -->
+            <!-- UNIQUE -->
+            <!-- ======================================== -->
+            <div class="topic-card" id="unique">
+                <div class="title"><i class="fas fa-star"></i> UNIQUE</div>
+                <div class="desc">
+                    <strong>الشرح:</strong> يمنع تكرار القيم في العمود. بيضمن إن كل قيمة فريدة.
+                    <br><strong>مثال عملي:</strong> البريد الإلكتروني ما يتكررش.
+                </div>
+                <div class="code-box">
+                    <button class="copy-btn" onclick="copyCode(this)">نسخ</button>
+                    <span class="line"><span class="kw">CREATE TABLE</span> <span class="tbl">Users</span> (</span>
+                    <span class="line">  <span class="col">Email</span> <span class="kw">VARCHAR</span>(<span class="num">100</span>) <span class="kw">UNIQUE</span></span>
+                    <span class="line">);</span>
+                    <span class="result">✅ يمنع إدخال بريد مكرر</span>
+                </div>
+                <div class="tags"><span><i class="fas fa-gavel"></i> قيد</span><span><i class="fas fa-star"></i> فريد</span></div>
+            </div>
+
+            <!-- ======================================== -->
+            <!-- CHECK -->
+            <!-- ======================================== -->
+            <div class="topic-card" id="check">
+                <div class="title"><i class="fas fa-check-circle"></i> CHECK</div>
+                <div class="desc">
+                    <strong>الشرح:</strong> يتحقق من شرط معين قبل إدخال أو تعديل البيانات.
+                    <br><strong>مثال عملي:</strong> مينفعش الراتب يكون أقل من صفر.
+                </div>
+                <div class="code-box">
+                    <button class="copy-btn" onclick="copyCode(this)">نسخ</button>
+                    <span class="line"><span class="kw">CREATE TABLE</span> <span class="tbl">Employees</span> (</span>
+                    <span class="line">  <span class="col">Salary</span> <span class="kw">DECIMAL</span>(<span class="num">10</span>,<span class="num">2</span>) <span class="kw">CHECK</span> (Salary <span class="op">>=</span> <span class="num">0</span>)</span>
+                    <span class="line">);</span>
+                    <span class="result">✅ يمنع إدخال راتب سالب</span>
+                </div>
+                <div class="tags"><span><i class="fas fa-gavel"></i> قيد</span><span><i class="fas fa-check-circle"></i> تحقق</span></div>
+            </div>
+
+            <!-- ======================================== -->
+            <!-- LIKE -->
+            <!-- ======================================== -->
+            <div class="topic-card" id="like">
+                <div class="title"><i class="fas fa-percent"></i> LIKE</div>
+                <div class="desc">
+                    <strong>الشرح:</strong> البحث بنمط معين في النصوص. % = أي عدد من الحروف، _ = حرف واحد.
+                    <br><strong>مثال عملي:</strong> البحث عن طلاب أسماؤهم تبدأ بحرف الألف.
+                </div>
+                <div class="code-box">
+                    <button class="copy-btn" onclick="copyCode(this)">نسخ</button>
+                    <span class="line"><span class="cmt">-- تبدأ بـ 'أ'</span></span>
+                    <span class="line"><span class="kw">WHERE</span> <span class="col">Name</span> <span class="kw">LIKE</span> <span class="str">'أ%'</span></span>
+                    <span class="line"><span class="cmt">-- تحتوي على 'مد'</span></span>
+                    <span class="line"><span class="kw">WHERE</span> <span class="col">Name</span> <span class="kw">LIKE</span> <span class="str">'%مد%'</span></span>
+                    <span class="line"><span class="cmt">-- ثاني حرف 'ح'</span></span>
+                    <span class="line"><span class="kw">WHERE</span> <span class="col">Name</span> <span class="kw">LIKE</span> <span class="str">'_ح%'</span></span>
+                </div>
+                <div class="tags"><span><i class="fas fa-search"></i> نمط</span></div>
+            </div>
+
+            <!-- ======================================== -->
+            <!-- BETWEEN -->
+            <!-- ======================================== -->
+            <div class="topic-card" id="between">
+                <div class="title"><i class="fas fa-arrows-alt-h"></i> BETWEEN</div>
+                <div class="desc">
+                    <strong>الشرح:</strong> البحث عن القيم في نطاق محدد (يشمل الحدين).
+                    <br><strong>مثال عملي:</strong> الطلاب اللي أعمارهم بين 18 و 25 سنة.
+                </div>
+                <div class="code-box">
+                    <button class="copy-btn" onclick="copyCode(this)">نسخ</button>
+                    <span class="line"><span class="kw">SELECT</span> <span class="op">*</span></span>
+                    <span class="line"><span class="kw">FROM</span> <span class="tbl">Students</span></span>
+                    <span class="line"><span class="kw">WHERE</span> <span class="col">Age</span> <span class="kw">BETWEEN</span> <span class="num">18</span> <span class="kw">AND</span> <span class="num">25</span>;</span>
+                    <span class="result">✅ الطلاب من 18 لـ 25 سنة</span>
+                </div>
+                <div class="tags"><span><i class="fas fa-arrows-alt-h"></i> نطاق</span></div>
+            </div>
+
+            <!-- ======================================== -->
+            <!-- IN -->
+            <!-- ======================================== -->
+            <div class="topic-card" id="in">
+                <div class="title"><i class="fas fa-inbox"></i> IN</div>
+                <div class="desc">
+                    <strong>الشرح:</strong> التحقق من وجود القيمة في قائمة محددة.
+                    <br><strong>مثال عملي:</strong> الطلاب في أقسام CS أو IS.
+                </div>
+                <div class="code-box">
+                    <button class="copy-btn" onclick="copyCode(this)">نسخ</button>
+                    <span class="line"><span class="kw">SELECT</span> <span class="op">*</span></span>
+                    <span class="line"><span class="kw">FROM</span> <span class="tbl">Students</span></span>
+                    <span class="line"><span class="kw">WHERE</span> <span class="col">Dept</span> <span class="kw">IN</span> (<span class="str">'CS'</span>, <span class="str">'IS'</span>);</span>
+                    <span class="result">✅ طلاب CS أو IS</span>
+                </div>
+                <div class="tags"><span><i class="fas fa-list"></i> قائمة</span></div>
+            </div>
+
+            <!-- ======================================== -->
+            <!-- CASE -->
+            <!-- ======================================== -->
+            <div class="topic-card" id="case">
+                <div class="title"><i class="fas fa-code-branch"></i> CASE</div>
+                <div class="desc">
+                    <strong>الشرح:</strong> منطق شرطي زي IF-ELSE داخل الاستعلام. بيصنف البيانات حسب شروط.
+                    <br><strong>مثال عملي:</strong> تصنيف الطلاب حسب العمر: كبير، متوسط، صغير.
+                </div>
+                <div class="code-box">
+                    <button class="copy-btn" onclick="copyCode(this)">نسخ</button>
+                    <span class="line"><span class="kw">SELECT</span> <span class="col">Name</span>,</span>
+                    <span class="line">  <span class="kw">CASE</span></span>
+                    <span class="line">    <span class="kw">WHEN</span> <span class="col">Age</span> <span class="op">>=</span> <span class="num">25</span> <span class="kw">THEN</span> <span class="str">'كبير'</span></span>
+                    <span class="line">    <span class="kw">WHEN</span> <span class="col">Age</span> <span class="op">>=</span> <span class="num">18</span> <span class="kw">THEN</span> <span class="str">'متوسط'</span></span>
+                    <span class="line">    <span class="kw">ELSE</span> <span class="str">'صغير'</span></span>
+                    <span class="line">  <span class="kw">END</span> <span class="kw">AS</span> <span class="col">Category</span></span>
+                    <span class="line"><span class="kw">FROM</span> <span class="tbl">Students</span>;</span>
+                    <span class="result">✅ كل طالب مع تصنيفه العمري</span>
+                </div>
+                <div class="tags"><span><i class="fas fa-code-branch"></i> شرطي</span></div>
+            </div>
+
+            <!-- ======================================== -->
+            <!-- SUBQUERY -->
+            <!-- ======================================== -->
+            <div class="topic-card" id="subquery">
+                <div class="title"><i class="fas fa-code"></i> SUBQUERY</div>
+                <div class="desc">
+                    <strong>الشرح:</strong> استعلام جوه استعلام تاني. الاستعلام الداخلي بيتنفذ الأول ونتيجته بتتستخدم في الاستعلام الخارجي.
+                    <br><strong>مثال عملي:</strong> الطلاب اللي في أقسام موجودة في القاهرة.
+                </div>
+                <div class="code-box">
+                    <button class="copy-btn" onclick="copyCode(this)">نسخ</button>
+                    <span class="line"><span class="kw">SELECT</span> <span class="col">Name</span></span>
+                    <span class="line"><span class="kw">FROM</span> <span class="tbl">Students</span></span>
+                    <span class="line"><span class="kw">WHERE</span> <span class="col">Dept</span> <span class="kw">IN</span> (</span>
+                    <span class="line">  <span class="kw">SELECT</span> <span class="col">DeptID</span></span>
+                    <span class="line">  <span class="kw">FROM</span> <span class="tbl">Departments</span></span>
+                    <span class="line">  <span class="kw">WHERE</span> <span class="col">Location</span> = <span class="str">'القاهرة'</span></span>
+                    <span class="line">);</span>
+                    <span class="result">✅ الطلاب في أقسام القاهرة</span>
+                </div>
+                <div class="tags"><span><i class="fas fa-code"></i> متداخل</span></div>
+            </div>
+
+            <!-- ======================================== -->
+            <!-- Agg Functions -->
+            <!-- ======================================== -->
+            <div class="topic-card" id="agg-functions">
+                <div class="title"><i class="fas fa-calculator"></i> Agg Functions</div>
+                <div class="desc">
+                    <strong>الشرح:</strong> دوال بتتعامل مع مجموعة من السجلات وترجع قيمة واحدة: COUNT (عدد), SUM (مجموع), AVG (متوسط), MAX (أكبر), MIN (أصغر).
+                    <br><strong>مثال عملي:</strong> إحصائيات عن أعمار الطلاب.
+                </div>
+                <div class="code-box">
+                    <button class="copy-btn" onclick="copyCode(this)">نسخ</button>
+                    <span class="line"><span class="kw">SELECT</span></span>
+                    <span class="line">  <span class="kw">COUNT</span>(<span class="op">*</span>) <span class="kw">AS</span> <span class="col">TotalStudents</span>,</span>
+                    <span class="line">  <span class="kw">AVG</span>(<span class="col">Age</span>) <span class="kw">AS</span> <span class="col">AverageAge</span>,</span>
+                    <span class="line">  <span class="kw">MAX</span>(<span class="col">Age</span>) <span class="kw">AS</span> <span class="col">Oldest</span>,</span>
+                    <span class="line">  <span class="kw">MIN</span>(<span class="col">Age</span>) <span class="kw">AS</span> <span class="col">Youngest</span></span>
+                    <span class="line"><span class="kw">FROM</span> <span class="tbl">Students</span>;</span>
+                    <span class="result">✅ إحصائيات عن الطلاب</span>
+                </div>
+                <div class="tags"><span><i class="fas fa-calculator"></i> تجميع</span></div>
+            </div>
+
+            <!-- ======================================== -->
+            <!-- VIEW -->
+            <!-- ======================================== -->
+            <div class="topic-card" id="view">
+                <div class="title"><i class="fas fa-eye"></i> VIEW</div>
+                <div class="desc">
+                    <strong>الشرح:</strong> جدول افتراضي مبني على استعلام. بيسهل الوصول للبيانات من غير ما تكتب الاستعلام كل مرة.
+                    <br><strong>مثال عملي:</strong> عرض افتراضي للطلاب الكبار (18+).
+                </div>
+                <div class="code-box">
+                    <button class="copy-btn" onclick="copyCode(this)">نسخ</button>
+                    <span class="line"><span class="kw">CREATE VIEW</span> <span class="tbl">AdultStudents</span> <span class="kw">AS</span></span>
+                    <span class="line"><span class="kw">SELECT</span> <span class="col">Name</span>, <span class="col">Age</span></span>
+                    <span class="line"><span class="kw">FROM</span> <span class="tbl">Students</span></span>
+                    <span class="line"><span class="kw">WHERE</span> <span class="col">Age</span> <span class="op">>=</span> <span class="num">18</span>;</span>
+                    <span class="result">✅ استخدمها: SELECT * FROM AdultStudents</span>
+                </div>
+                <div class="tags"><span><i class="fas fa-eye"></i> عرض</span></div>
+            </div>
+
+            <!-- ======================================== -->
+            <!-- SQL SERVER -->
+            <!-- ======================================== -->
+            <div class="topic-card" id="sql-server">
+                <div class="title"><i class="fas fa-server"></i> SQL SERVER</div>
+                <div class="desc">
+                    <strong>الشرح:</strong> نظام إدارة قواعد بيانات من Microsoft. فيه ميزات إضافية زي TOP, GETDATE(), @@ROWCOUNT.
+                    <br><strong>مثال عملي:</strong> جلب أول 10 طلاب، التاريخ الحالي، وعدد السجلات المتأثرة.
+                </div>
+                <div class="code-box">
+                    <button class="copy-btn" onclick="copyCode(this)">نسخ</button>
+                    <span class="line"><span class="kw">SELECT</span> <span class="kw">TOP</span> <span class="num">10</span> <span class="op">*</span> <span class="kw">FROM</span> <span class="tbl">Students</span>;</span>
+                    <span class="line"><span class="kw">SELECT</span> <span class="fn">GETDATE</span>() <span class="kw">AS</span> <span class="col">CurrentDateTime</span>;</span>
+                    <span class="line"><span class="kw">SELECT</span> <span class="var">@@ROWCOUNT</span> <span class="kw">AS</span> <span class="col">RowsAffected</span>;</span>
+                    <span class="result">✅ ميزات SQL Server</span>
+                </div>
+                <div class="tags"><span><i class="fas fa-server"></i> منصة</span></div>
+            </div>
+
+            <!-- ======================================== -->
+            <!-- CONNECT (نموذج الاتصال) -->
+            <!-- ======================================== -->
+            <div class="topic-card" id="connect">
+                <div class="title"><i class="fas fa-envelope"></i> تواصل معي</div>
+                <div class="desc">
+                     يمكنك إرسال رسالة مباشرة عبر هذا النموذج. سيتم إرسال البيانات إلى بريدي الإلكتروني بشكل آمن.
+                    <br><strong>ملاحظة:</strong> استخدم بريدك الإلكتروني الحقيقي حتى أتمكن من الرد عليك.
+                </div>
+                <div class="code-box" style="background: transparent; border-left: none; padding: 0; direction: rtl;">
+                    <form class="connect-form" action="https://formspree.io/f/xrpzonag" method="POST" style="direction: rtl;">
+                        <input type="text" name="name" placeholder="الاسم بالكامل" required>
+                        <input type="email" name="email" placeholder="بريدك الإلكتروني" required>
+                        <textarea name="message" rows="4" placeholder="رسالتك..." required></textarea>
+                        <button type="submit">
+                            <i class="fas fa-paper-plane"></i> إرسال الرسالة
+                        </button>
+                    </form>
+                <div class="tags">
+                    <span><i class="fas fa-envelope"></i> تواصل</span>
+                    <span><i class="fas fa-lock"></i> آمن</span>
+                </div>
+            </div>
+
+            <hr>
+            <div class="footer-note">
+                <i class="fas fa-crown"></i> EG_Code | Elghazaly Web
+                <br>تحت إشراف البشمهندس إبراهيم محمد الغزالي
+            </div>
+
+        </div>
+    </div>
+
+    <!-- ===== MODAL ===== -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal-box">
+            <button class="close" id="closeModal">&times;</button>
+            <div id="modalContent"></div>
+        </div>
+    </div>
+
+    <script>
+        // ===== COPY =====
+        function copyCode(btn) {
+            const box = btn.parentElement;
+            const lines = box.querySelectorAll('.line');
+            let text = '';
+            lines.forEach(line => text += line.textContent + '\n');
+            text = text.trim();
+
+            navigator.clipboard.writeText(text).then(() => {
+                btn.textContent = '✅';
+                setTimeout(() => btn.textContent = 'نسخ', 1500);
+            }).catch(() => alert('انسخ الكود يدوياً'));
+        }
+
+        // ===== SIDEBAR =====
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('sidebarOverlay');
+        const toggle = document.getElementById('menuToggle');
+
+        toggle.addEventListener('click', () => {
+            sidebar.classList.toggle('open');
+            overlay.classList.toggle('active');
+        });
+
+        overlay.addEventListener('click', () => {
+            sidebar.classList.remove('open');
+            overlay.classList.remove('active');
+        });
+
+        document.querySelectorAll('.sidebar-nav a').forEach(link => {
+            link.addEventListener('click', () => {
+                if (window.innerWidth <= 850) {
+                    sidebar.classList.remove('open');
+                    overlay.classList.remove('active');
+                }
+            });
+        });
+
+        // ===== MODAL =====
+        const modalOverlay = document.getElementById('modalOverlay');
+        const modalContent = document.getElementById('modalContent');
+        const closeModal = document.getElementById('closeModal');
+
+        function openModal(html) {
+            modalContent.innerHTML = html;
+            modalOverlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModalFunc() {
+            modalOverlay.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        closeModal.addEventListener('click', closeModalFunc);
+        modalOverlay.addEventListener('click', (e) => {
+            if (e.target === modalOverlay) closeModalFunc();
+        });
+
+        // ===== ABOUT =====
+        document.getElementById('aboutBtn').addEventListener('click', () => {
+            openModal(`
+                <h2><i class="fas fa-user"></i> About</h2>
+                <div class="info-item"><i class="fas fa-user"></i> <strong>الاسم:</strong> إبراهيم محمد الغزالي</div>
+                <div class="info-item"><i class="fas fa-code"></i> <strong>التخصص:</strong> Full-Stack .NET Developer</div>
+                <div class="info-item"><i class="fas fa-university"></i> <strong>يدرس في:</strong> DEPI</div>
+                <div class="info-item"><i class="fas fa-laptop-code"></i> <strong>الشغف:</strong> تطوير ويب، قواعد بيانات</div>
+                <p style="margin-top:12px;">مطور Full-Stack .NET، أدرس في DEPI. خبرة في SQL Server، C#، ASP.NET، JavaScript.</p>
+            `);
+        });
+
+        // ===== CONNECT من زر الـ Header =====
+        document.getElementById('connectBtn').addEventListener('click', () => {
+            document.getElementById('connect').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+
+        // ===== SMOOTH SCROLL =====
+        document.querySelectorAll('.sidebar-nav a').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                const href = this.getAttribute('href');
+                if (href && href.startsWith('#')) {
+                    e.preventDefault();
+                    const target = document.querySelector(href);
+                    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
